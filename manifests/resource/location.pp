@@ -65,6 +65,9 @@ define nginx::resource::location (
   $location_cfg_prepend = undef,
   $location_cfg_append  = undef,
   $try_files            = undef,
+  $fastcgi_pass         = undef,
+  $fastcgi_index        = "index.php",
+  $fastcgi_param        = undef,
   $location) {
   File {
     owner  => 'root',
@@ -86,6 +89,8 @@ define nginx::resource::location (
     $content_real = template('nginx/vhost/vhost_location_alias.erb')
   } elsif ($stub_status != undef) {
     $content_real = template('nginx/vhost/vhost_location_stub_status.erb')
+  } elsif ($fastcgi_pass != undef) {
+    $content_real = template('nginx/vhost/vhost_location_fastcgi.erb')
   } else {
     $content_real = template('nginx/vhost/vhost_location_directory.erb')
   }
@@ -95,8 +100,8 @@ define nginx::resource::location (
     fail('Cannot create a location reference without attaching to a virtual host')
   }
 
-  if (($www_root == undef) and ($proxy == undef) and ($location_alias == undef) and ($stub_status == undef)) {
-    fail('Cannot create a location reference without a www_root, proxy, location_alias or stub_status defined')
+  if (($www_root == undef) and ($proxy == undef) and ($location_alias == undef) and ($stub_status == undef) and ($fastcgi_pass == undef)) {
+    fail('Cannot create a location reference without a www_root, proxy, location_alias, stub_status or fastcgi_pass defined')
   }
 
   if (($www_root != undef) and ($proxy != undef)) {

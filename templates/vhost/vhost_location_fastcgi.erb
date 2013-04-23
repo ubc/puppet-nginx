@@ -1,0 +1,11 @@
+  location <%= location %> {
+<% if @location_cfg_prepend -%><% location_cfg_prepend.each do |key,value| -%>
+    <%= key %> <%= value %>;
+<% end -%><% end -%>
+    fastcgi_pass <%= fastcgi_pass %>;
+    fastcgi_index <%= fastcgi_index %>;
+    fastcgi_param <%= fastcgi_param %>;
+<% if @location_cfg_append -%><% location_cfg_append.each do |key,value| -%>
+    <%= key %> <%= value %>;
+<% end -%><% end -%>
+  }
