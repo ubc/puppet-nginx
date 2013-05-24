@@ -16,8 +16,8 @@
 class nginx::package::redhat {
   $redhat_packages = ['nginx', 'GeoIP', 'gd', 'libXpm', 'libxslt']
 
-  if downcase($::operatingsystem) == "redhat" {
-    $os_type = "rhel"
+  if downcase($::operatingsystem) == 'redhat' {
+    $os_type = 'rhel'
   } else {
     $os_type = downcase($::operatingsystem)
   }
