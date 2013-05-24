@@ -28,15 +28,15 @@ class nginx::package::redhat {
     $os_rel = $::lsbmajdistrelease
   }
 
-  yumrepo { "nginx-release":
-    baseurl  => "http://nginx.org/packages/${os_type}/${os_rel}/\$basearch/",
-    descr    => 'nginx repo',
+  yumrepo { "ctlt-release":
+    baseurl  => "http://yum.ctlt.ubc.ca/packages/${os_type}/${os_rel}/\$basearch/",
+    descr    => 'ctlt repo',
     enabled  => '1',
     gpgcheck => '0',
   }
 
   package { $redhat_packages:
     ensure  => present,
-    require => Yumrepo['nginx-release'],
+    require => Yumrepo['ctlt-release'],
   }
 }

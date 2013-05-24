@@ -26,6 +26,8 @@ class nginx::params {
   $nx_keepalive_timeout  = 65
   $nx_tcp_nodelay        = on
   $nx_gzip               = on
+  $nx_pagespeed          = on
+  $nx_pagespeed_cache    = "${nx_run_dir}/pagespeed_cache"
 
   $nx_proxy_redirect          = off
   $nx_proxy_set_header        = [

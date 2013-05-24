@@ -56,6 +56,10 @@ class nginx::config(
     ensure => directory,
   }
 
+  file { "${nginx::config::nx_pagespeed_cache}":
+    ensure => directory,
+  }
+
   file { "${nginx::config::nx_client_body_temp_path}":
     ensure => directory,
     owner  => $nginx::params::nx_daemon_user,
