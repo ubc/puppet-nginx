@@ -38,7 +38,7 @@ http {
 
   <% if scope.lookupvar('nginx::params::nx_pagespeed') == 'on' %> 
   pagespeed on;
-  pagespeed FileCachePath <%= scope.lookupvar('nginx::params::nx_pagespeed')%>;
+  pagespeed FileCachePath <%= scope.lookupvar('nginx::params::nx_pagespeed_cache')%>;
   <% end %>
 
   include /etc/nginx/conf.d/*.conf;
