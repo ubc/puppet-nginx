@@ -71,7 +71,7 @@ define nginx::resource::vhost (
   $ssl_port               = '443',
   $proxy                  = undef,
   $proxy_read_timeout     = $nginx::params::nx_proxy_read_timeout,
-  $proxy_set_header       = [],
+  $proxy_set_header       = $nginx::params::nx_proxy_set_header,
   $proxy_cache            = false,
   $proxy_cache_valid      = false,
   $fastcgi                = undef,
