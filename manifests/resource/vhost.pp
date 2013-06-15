@@ -42,7 +42,7 @@
 #     put after everything else inside vhost
 #   [*rewrite_to_https*]        - Adds a server directive and rewrite rule to
 #      rewrite to ssl
-#   [*include_files*] 		      - Adds include files to vhost
+#   [*include_files*]           - Adds include files to vhost
 #
 # Actions:
 #
@@ -52,7 +52,7 @@
 #  nginx::resource::vhost { 'test2.local':
 #    ensure   => present,
 #    www_root => '/var/www/nginx-default',
-#    ssl      => 'true',
+#    ssl      => true,
 #    ssl_cert => '/tmp/server.crt',
 #    ssl_key  => '/tmp/server.pem',
 #  }
@@ -84,14 +84,14 @@ define nginx::resource::vhost (
   $server_name            = [$name],
   $www_root               = undef,
   $rewrite_www_to_non_www = false,
-  $rewrite_to_https 	  = undef,
+  $rewrite_to_https       = undef,
   $location_cfg_prepend   = undef,
   $location_cfg_append    = undef,
   $try_files              = undef,
   $auth_basic             = undef,
   $auth_basic_user_file   = undef,
   $vhost_cfg_append       = undef,
-  $include_files		  = undef
+  $include_files          = undef
 ) {
 
   File {
@@ -131,8 +131,8 @@ define nginx::resource::vhost (
     }
   }
 
-  if ($ssl == 'true') and ($ssl_port == $listen_port) {
-    $ssl_only = 'true'
+  if ($ssl == true) and ($ssl_port == $listen_port) {
+    $ssl_only = true
   }
 
   # Create the default location reference for the vHost
@@ -171,9 +171,9 @@ define nginx::resource::vhost (
   }
 
   # Create SSL File Stubs if SSL is enabled
-  if ($ssl == 'true') {
+  if ($ssl == true) {
     file { "${nginx::config::nx_temp_dir}/nginx.d/${name}-700-ssl":
-      ensure => $ensure ? {
+      ensure  => $ensure ? {
         'absent' => absent,
         default  => 'file',
       },
@@ -181,7 +181,7 @@ define nginx::resource::vhost (
       notify  => Class['nginx::service'],
     }
     file { "${nginx::config::nx_temp_dir}/nginx.d/${name}-999-ssl":
-      ensure => $ensure ? {
+      ensure  => $ensure ? {
         'absent' => absent,
         default  => 'file',
       },
