@@ -1,8 +1,8 @@
 # NGINX Module
 
-James Fryman <james@frymanet.com>
+James Fryman <james@frymanet.com>, updated by Pan Luo <pan.luo@ubc.ca>
 
-This module manages NGINX from within Puppet.
+This module manages NGINX from within Puppet. It also enables pagespeed for nginx using a pre-compiled nginx RPM distribution hosted on CTLT server. It allows upstream and vhost resources defined in Hiera.
 
 # Quick Start
 
