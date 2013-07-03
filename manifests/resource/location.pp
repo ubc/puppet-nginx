@@ -83,7 +83,8 @@ define nginx::resource::location (
   $proxy_cache          = false,
   $proxy_cache_valid    = false,
   $auth_basic           = undef,
-  $auth_basic_user_file = undef
+  $auth_basic_user_file = undef,
+  $additional 		= undef,
 ) {
   File {
     owner  => 'root',
@@ -115,8 +116,8 @@ define nginx::resource::location (
   if ($vhost == undef) {
     fail('Cannot create a location reference without attaching to a virtual host')
   }
-  if (($www_root == undef) and ($proxy == undef) and ($location_alias == undef) and ($stub_status == undef) and ($fastcgi == undef)) {
-    fail('Cannot create a location reference without a www_root, proxy, location_alias, fastcgi or stub_status defined')
+  if (($www_root == undef) and ($proxy == undef) and ($location_alias == undef) and ($stub_status == undef) and ($fastcgi == undef) and ($additional == undef)) {
+    fail('Cannot create a location reference without a www_root, proxy, location_alias, fastcgi, stub_status or additional defined')
   }
 
   if (($www_root != undef) and ($proxy != undef)) {

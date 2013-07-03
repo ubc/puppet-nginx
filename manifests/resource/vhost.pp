@@ -91,7 +91,8 @@ define nginx::resource::vhost (
   $auth_basic             = undef,
   $auth_basic_user_file   = undef,
   $vhost_cfg_append       = undef,
-  $include_files          = undef
+  $include_files          = undef,
+  $vhost_additional       = undef,
 ) {
 
   File {
@@ -151,6 +152,7 @@ define nginx::resource::vhost (
     fastcgi_script       => $fastcgi_script,
     try_files            => $try_files,
     www_root             => $www_root,
+    additional           => $vhost_additional,
     notify               => Class['nginx::service'],
   }
 
