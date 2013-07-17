@@ -1,12 +1,12 @@
-  location <%= location %> {
+  location <%= @location %> {
 <% if @location_cfg_prepend -%><% location_cfg_prepend.each do |key,value| -%>
     <%= key %> <%= value %>;
 <% end -%><% end -%>
-    root  <%= www_root %>;
-    include <%= fastcgi_params %>;
-    fastcgi_pass <%= fastcgi %>;
-<% unless fastcgi_script == :undef %>
-    fastcgi_param SCRIPT_FILENAME <%= fastcgi_script %>;
+    root  <%= @www_root %>;
+    include <%= @fastcgi_params %>;
+    fastcgi_pass <%= @fastcgi %>;
+<% unless @fastcgi_script == :undef %>
+    fastcgi_param SCRIPT_FILENAME <%= @fastcgi_script %>;
 <% end -%>
 <% if @location_cfg_append -%><% location_cfg_append.each do |key,value| -%>
     <%= key %> <%= value %>;

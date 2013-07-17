@@ -32,7 +32,8 @@ class nginx::package::redhat {
     baseurl  => "http://yum.ctlt.ubc.ca/packages/${os_type}/${os_rel}/\$basearch/",
     descr    => 'ctlt repo',
     enabled  => '1',
-    gpgcheck => '0',
+    gpgcheck => '1',
+    gpgkey => "http://nginx.org/keys/nginx_signing.key",
   }
 
   package { $redhat_packages:
