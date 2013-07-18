@@ -2,7 +2,9 @@
 <% if @location_cfg_prepend -%><% location_cfg_prepend.each do |key,value| -%>
     <%= key %> <%= value %>;
 <% end -%><% end -%>
-    root  <%= @www_root %>;
+<% if defined? @www_root -%>
+    root  <%= www_root %>;
+<% end -%>
     include <%= @fastcgi_params %>;
     fastcgi_pass <%= @fastcgi %>;
 <% unless @fastcgi_script == :undef %>

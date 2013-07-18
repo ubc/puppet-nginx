@@ -43,6 +43,7 @@
 #     the authentication realm.
 #   [*vhost_cfg_append*]        - It expects a hash with custom directives to
 #     put after everything else inside vhost
+#   [*vhost_cfg_custom*]        - It expects an arbitrary string to put after everything else inside vhost
 #   [*rewrite_to_https*]        - Adds a server directive and rewrite rule to
 #      rewrite to ssl
 #   [*include_files*]           - Adds include files to vhost
@@ -99,7 +100,8 @@ define nginx::resource::vhost (
   $auth_basic_user_file   = undef,
   $vhost_cfg_append       = undef,
   $include_files          = undef,
-  $vhost_additional       = undef,
+  $vhost_cfg_custom	  = undef,
+  $location_cfg_custom	  = undef,
 ) {
 
   File {
@@ -160,7 +162,7 @@ define nginx::resource::vhost (
     try_files            => $try_files,
     www_root             => $www_root,
     location_custom_cfg  => $location_custom_cfg,
-    additional           => $vhost_additional,
+    location_cfg_custom  => $location_cfg_custom,
     notify               => Class['nginx::service'],
   }
 

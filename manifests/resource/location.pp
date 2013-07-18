@@ -21,6 +21,7 @@
 #   [*location_custom_cfg*]  - Expects a hash with custom directives, cannot be used with other location types (proxy, fastcgi, root, or stub_status)
 #   [*location_cfg_prepend*] - Expects a hash with extra directives to put before anything else inside location (used with all other types except custom_cfg)
 #   [*location_cfg_append*]  - Expects a hash with extra directives to put after everything else inside location (used with all other types except custom_cfg)
+#   [*location_cfg_custom*]  - Arbitrary configurations, e.g. if statements
 #   [*try_files*]            - An array of file locations to try
 #   [*option*]               - Reserved for future use
 #   [*proxy_cache*]           - This directive sets name of zone for caching.
@@ -91,7 +92,7 @@ define nginx::resource::location (
   $auth_basic           = undef,
   $auth_basic_user_file = undef,
   $priority             = 500,
-  $additional 		= undef,
+  $location_cfg_custom	= undef,
 ) {
   File {
     owner  => 'root',
@@ -110,8 +111,8 @@ define nginx::resource::location (
   if ($vhost == undef) {
     fail('Cannot create a location reference without attaching to a virtual host')
   }
-  if (($www_root == undef) and ($proxy == undef) and ($location_alias == undef) and ($stub_status == undef) and ($fastcgi == undef) and ($location_custom_cfg == undef) and ($additional == undef)) {
-    fail('Cannot create a location reference without a www_root, proxy, location_alias, fastcgi, stub_status, location_custom_cfg or additional defined')
+  if (($www_root == undef) and ($proxy == undef) and ($location_alias == undef) and ($stub_status == undef) and ($fastcgi == undef) and ($location_custom_cfg == undef) and ($location_cfg_custom == undef)) {
+    fail('Cannot create a location reference without a www_root, proxy, location_alias, fastcgi, stub_status, location_custom_cfg or alocation_cfg_custom defined')
   }
   if (($www_root != undef) and ($proxy != undef)) {
     fail('Cannot define both directory and proxy in a virtual host')
