@@ -26,7 +26,13 @@ class nginx::config(
   $proxy_cache_inactive   = $nginx::params::nx_proxy_cache_inactive,
   $proxy_http_version     = $nginx::params::nx_proxy_http_version,
   $types_hash_max_size    = $nginx::params::nx_types_hash_max_size,
-  $types_hash_bucket_size = $nginx::params::nx_types_hash_bucket_size
+  $types_hash_bucket_size = $nginx::params::nx_types_hash_bucket_size,
+  $client_max_body_size   = $nginx::params::nx_client_max_body_size,
+  $proxy_buffers          = $nginx::params::nx_proxy_buffers,
+  $http_cfg_append        = $nginx::params::nx_http_cfg_append,
+  $nginx_error_log        = $nginx::params::nx_nginx_error_log,
+  $http_access_log        = $nginx::params::nx_http_access_log,
+  $proxy_buffer_size      = $nginx::params::nx_proxy_buffer_size,
 ) inherits nginx::params {
   File {
     owner => 'root',
@@ -43,7 +49,6 @@ class nginx::config(
   }
   if $confd_purge == true {
     File["${nginx::params::nx_conf_dir}/conf.d"] {
-      ignore  => 'vhost_autogen.conf',
       purge   => true,
       recurse => true,
     }
@@ -54,10 +59,17 @@ class nginx::config(
   }
   if $confd_purge == true {
     File["${nginx::params::nx_conf_dir}/conf.mail.d"] {
-      ignore  => 'vhost_autogen.conf',
       purge   => true,
       recurse => true,
     }
+  }
+
+  file { "${nginx::params::nx_conf_dir}/conf.d/vhost_autogen.conf":
+    ensure => absent,
+  }
+
+  file { "${nginx::params::nx_conf_dir}/conf.mail.d/vhost_autogen.conf":
+    ensure => absent,
   }
 
   file {$nginx::config::nx_run_dir:
@@ -80,6 +92,14 @@ class nginx::config(
     owner  => $nginx::params::nx_daemon_user,
   }
 
+  file { "${nginx::params::nx_conf_dir}/sites-available":
+    ensure => directory,
+  }
+
+  file { "${nginx::params::nx_conf_dir}/sites-enabled":
+    ensure => directory,
+  }
+
   file { '/etc/nginx/sites-enabled/default':
     ensure => absent,
   }
@@ -95,13 +115,13 @@ class nginx::config(
   }
 
   file { "${nginx::config::nx_temp_dir}/nginx.d":
-    ensure  => directory,
+    ensure  => absent,
     purge   => true,
     recurse => true,
   }
 
   file { "${nginx::config::nx_temp_dir}/nginx.mail.d":
-    ensure  => directory,
+    ensure  => absent,
     purge   => true,
     recurse => true,
   }

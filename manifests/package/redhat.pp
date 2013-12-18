@@ -13,30 +13,58 @@
 # Sample Usage:
 #
 # This class file is not called directly
-class nginx::package::redhat {
-  $redhat_packages = ['nginx', 'gd', 'libXpm', 'libxslt']
+class nginx::package::redhat (
+  $manage_repo    = true,
+  $package_ensure = 'present',
+  $package_name   = 'nginx',
+) {
 
-  if downcase($::operatingsystem) == 'redhat' {
-    $os_type = 'rhel'
-  } else {
-    $os_type = downcase($::operatingsystem)
+  case $::operatingsystem {
+    'fedora': {
+      # nginx.org does not supply RPMs for fedora
+      # fedora 18 provides 1.2.x packages
+      # fedora 19 has 1.4.x packages are in
+
+      # fedora 18 users will need to supply their own nginx 1.4 rpms and/or repo
+      if $::lsbmajdistrelease and $::lsbmajdistrelease < 19 {
+        notice("${::operatingsystem} ${::lsbmajdistrelease} does not supply nginx >= 1.4 packages")
+      }
+    }
+    default: {
+      case $::lsbmajdistrelease {
+        5, 6: {
+          $os_rel = $::lsbmajdistrelease
+        }
+        default: {
+          # Amazon uses the year as the $::lsbmajdistrelease
+          $os_rel = 6
+        }
+      }
+
+      # as of 2013-07-28
+      # http://nginx.org/packages/centos appears to be identical to
+      # http://nginx.org/packages/rhel
+      # no other dedicated dirs exist for platforms under $::osfamily == redhat
+      if $manage_repo {
+        yumrepo { 'ctlt-release':
+          baseurl  => "http://yum.ctlt.ubc.ca/packages/rhel/${os_rel}/\$basearch/",
+          descr    => 'ctlt repo',
+          enabled  => '1',
+          gpgcheck => '0',
+          priority => '1',
+          before   => Package[$package_name],
+        }
+
+        file { '/etc/yum.repos.d/ctlt-release.repo':
+          ensure  => present,
+          require => Yumrepo['ctlt-release'],
+        }
+      }
+    }
   }
 
-  if $::lsbmajdistrelease == undef {
-    $os_rel = regsubst($::operatingsystemrelease, '\..*$', '')
-  } else {
-    $os_rel = $::lsbmajdistrelease
+  package { $package_name:
+    ensure  => $package_ensure,
   }
 
-  yumrepo { "ctlt-release":
-    baseurl  => "http://yum.ctlt.ubc.ca/packages/${os_type}/${os_rel}/\$basearch/",
-    descr    => 'ctlt repo',
-    enabled  => '1',
-    gpgcheck => '0',
-  }
-
-  package { $redhat_packages:
-    ensure  => present,
-    require => Yumrepo['ctlt-release'],
-  }
 }
