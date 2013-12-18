@@ -38,7 +38,7 @@ http {
   proxy_cache_path    <%= @proxy_cache_path %> levels=<%= @proxy_cache_levels %> keys_zone=<%= @proxy_cache_keys_zone %> max_size=<%= @proxy_cache_max_size %> inactive=<%= @proxy_cache_inactive %>;
 <% end -%>
 
-  <% if scope.lookupvar('nginx::params::nx_pagespeed') == 'on' %> 
+  <% if $pagespeed == 'on' %> 
   pagespeed on;
   pagespeed FileCachePath <%= scope.lookupvar('nginx::params::nx_pagespeed_cache')%>;
   <% end %>

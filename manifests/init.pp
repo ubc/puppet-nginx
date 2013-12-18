@@ -46,6 +46,7 @@ class nginx (
   $nginx_vhosts		  = {},
   $nginx_upstreams	  = {},
   $nginx_locations	  = {},
+  $pagespeed              = $nginx::params::nx_pagespeed,
 ) inherits nginx::params {
 
   include stdlib
