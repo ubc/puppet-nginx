@@ -8,9 +8,6 @@ include <%= file %>;
   <%= key %> <%= value %>;
 <% end -%>
 <% end -%>
-<% if @vhost_cfg_custom -%>
-  <%= vhost_cfg_custom %>
-<% end -%>
 }
 <% if @rewrite_www_to_non_www -%>
 server {

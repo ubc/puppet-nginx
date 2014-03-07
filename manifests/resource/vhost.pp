@@ -91,7 +91,6 @@
 #   [*client_max_body_size*]    - This directive sets client_max_body_size.
 #   [*vhost_cfg_append*]        - It expects a hash with custom directives to
 #     put after everything else inside vhost
-#   [*vhost_cfg_custom*]        - It expects an arbitrary string to put after everything else inside vhost
 #   [*vhost_cfg_prepend*]       - It expects a hash with custom directives to
 #     put before everything else inside vhost
 #   [*vhost_cfg_ssl_append*]        - It expects a hash with custom directives to
@@ -177,7 +176,6 @@ define nginx::resource::vhost (
   $vhost_cfg_ssl_prepend      = undef,
   $vhost_cfg_ssl_append       = undef,
   $include_files          = undef,
-  $vhost_cfg_custom	  = undef,
   $access_log             = undef,
   $error_log              = undef,
   $passenger_cgi_param    = undef,
