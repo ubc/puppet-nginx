@@ -101,7 +101,7 @@ define nginx::resource::mailhost (
   validate_string($xclient)
   validate_array($server_name)
 
-  $config_file = "${nginx::config::nx_conf_dir}/conf.mail.d/${name}.conf"
+  $config_file = "${nginx::config::conf_dir}/conf.mail.d/${name}.conf"
 
   # Add IPv6 Logic Check - Nginx service will not start if ipv6 is enabled
   # and support does not exist for it in the kernel.
@@ -125,6 +125,7 @@ define nginx::resource::mailhost (
 
   if ($listen_port != $ssl_port) {
     concat::fragment { "${name}-header":
+      ensure  => present,
       target  => $config_file,
       content => template('nginx/mailhost/mailhost.erb'),
       order   => '001',
@@ -134,6 +135,7 @@ define nginx::resource::mailhost (
   # Create SSL File Stubs if SSL is enabled
   if ($ssl) {
     concat::fragment { "${name}-ssl":
+      ensure  => present,
       target  => $config_file,
       content => template('nginx/mailhost/mailhost_ssl.erb'),
       order   => '700',

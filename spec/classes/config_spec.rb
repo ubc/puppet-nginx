@@ -162,6 +162,12 @@ describe 'nginx::config' do
           :match => 'worker_processes 4;',
         },
         {
+          :title => 'should set worker_rlimit_nofile',
+          :attr  => 'worker_rlimit_nofile',
+          :value => '10000',
+          :match => 'worker_rlimit_nofile 10000;',
+        },
+        {
           :title => 'should set error_log',
           :attr  => 'nginx_error_log',
           :value => '/path/to/error.log',
@@ -207,6 +213,30 @@ describe 'nginx::config' do
             '  test2 test value 2;',
           ],
         },
+        {
+            :title => 'should set pid',
+            :attr  => 'pid',
+            :value => '/path/to/pid',
+            :match => 'pid        /path/to/pid;',
+        },
+        {
+            :title => 'should set tcp_nodelay',
+            :attr  => 'http_tcp_nodelay',
+            :value => 'on',
+            :match => '  tcp_nodelay        on;',
+        },
+        {
+            :title => 'should set tcp_nopush',
+            :attr  => 'http_tcp_nopush',
+            :value => 'on',
+            :match => '  tcp_nopush on;',
+        },
+        {
+            :title => 'should set keepalive_timeout',
+            :attr  => 'keepalive_timeout',
+            :value => '123',
+            :match => '  keepalive_timeout  123;',
+        },
       ].each do |param|
         context "when #{param[:attr]} is #{param[:value]}" do
           let :params do { param[:attr].to_sym => param[:value] } end
@@ -224,12 +254,6 @@ describe 'nginx::config' do
 
     describe "proxy.conf template content" do
       [
-        {
-          :title => 'should set client_max_body_size',
-          :attr  => 'client_max_body_size',
-          :value => '5m',
-          :match => 'client_max_body_size      5m;',
-        },
         {
           :title => 'should set proxy_buffers',
           :attr  => 'proxy_buffers',
@@ -257,6 +281,18 @@ describe 'nginx::config' do
             'proxy_set_header        header2;',
           ],
         },
+        {
+            :title    => 'should set client_body_temp_path',
+            :attr     => 'client_body_temp_path',
+            :value    => '/path/to/body_temp',
+            :match => 'client_body_temp_path   /path/to/body_temp;',
+        },
+        {
+            :title    => 'should set proxy_temp_path',
+            :attr     => 'proxy_temp_path',
+            :value    => '/path/to/proxy_temp',
+            :match => 'proxy_temp_path         /path/to/proxy_temp;',
+        },
       ].each do |param|
         context "when #{param[:attr]} is #{param[:value]}" do
           let :params do { param[:attr].to_sym => param[:value] } end
@@ -283,6 +319,32 @@ describe 'nginx::config' do
     context "when confd_purge false" do
       let(:params) {{:confd_purge => false}}
       it { should contain_file('/etc/nginx/conf.d').without([
+        'ignore',
+        'purge',
+        'recurse'
+      ])}
+    end
+
+    context "when vhost_purge true" do
+      let(:params) {{:vhost_purge => true}}
+      it { should contain_file('/etc/nginx/sites-available').with(
+        :purge => true,
+        :recurse => true
+      )}
+      it { should contain_file('/etc/nginx/sites-enabled').with(
+        :purge => true,
+        :recurse => true
+      )}
+    end
+
+    context "when vhost_purge false" do
+      let(:params) {{:vhost_purge => false}}
+      it { should contain_file('/etc/nginx/sites-available').without([
+        'ignore',
+        'purge',
+        'recurse'
+      ])}
+      it { should contain_file('/etc/nginx/sites-enabled').without([
         'ignore',
         'purge',
         'recurse'
